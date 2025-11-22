@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import React from "react";
@@ -63,10 +63,10 @@ export default function UserAddressCard() {
             </div>
           </div>
 
-         <button
-          disabled
-          className="flex w-full items-center justify-center gap-2 rounded-full border border-gray-300 bg-gray-200 px-4 py-3 text-sm font-medium text-gray-500 shadow-theme-xs cursor-not-allowed lg:inline-flex lg:w-auto"
-        >
+          <button
+            disabled
+            className="flex w-full items-center justify-center gap-2 rounded-full border border-gray-300 bg-gray-200 px-4 py-3 text-sm font-medium text-gray-500 shadow-theme-xs cursor-not-allowed lg:inline-flex lg:w-auto"
+          >
             <svg
               className="fill-current"
               width="18"

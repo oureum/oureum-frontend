@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 // src/lib/apiUser.ts
 //
 // Frontend API helpers for the User app (PWA).
@@ -145,9 +143,11 @@ export async function getCurrentPrice(signal?: AbortSignal): Promise<PricePayloa
 
 // ---------- MetaMask connect ----------
 export async function connectMetaMask(): Promise<`0x${string}`> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   if (typeof window === "undefined" || !(window as any).ethereum) {
     throw new Error("MetaMask not detected");
   }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const ethereum = (window as any).ethereum;
   const accounts = (await ethereum.request({
     method: "eth_requestAccounts",

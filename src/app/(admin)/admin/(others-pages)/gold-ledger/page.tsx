@@ -100,7 +100,7 @@ export default function GoldLedgerPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
 
-  async function loadLedger() {
+  const loadLedger = React.useCallback(async () => {
     setLoadingLedger(true);
     try {
       const data = await listGoldLedger({ limit: 200 });
@@ -110,9 +110,9 @@ export default function GoldLedgerPage() {
     } finally {
       setLoadingLedger(false);
     }
-  }
+  }, []);
 
-  async function loadLogs() {
+  const loadLogs = React.useCallback(async () => {
     setLoadingLogs(true);
     try {
       // Take first 200 logs to aggregate mint/burn.
@@ -126,16 +126,16 @@ export default function GoldLedgerPage() {
     } finally {
       setLoadingLogs(false);
     }
-  }
+  }, []);
 
-  async function loadAll() {
+  const loadAll = React.useCallback(async () => {
     setErrorText(null);
     await Promise.all([loadLedger(), loadLogs()]);
-  }
+  }, [loadLedger, loadLogs]);
 
   useEffect(() => {
     void loadAll();
-  }, []);
+  }, [loadAll]);
 
   // Intake stats (keep the same as before)
   const intakeStats = useMemo(() => {

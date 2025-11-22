@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
+
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
@@ -33,7 +32,9 @@ const OUMG_DECIMALS = 6;
 
 // ---------- Native OUM helpers ----------
 async function getNativeOumBalance(addr: `0x${string}`): Promise<string> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   if (typeof window === "undefined" || !(window as any).ethereum) return "—";
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const ethereum = (window as any).ethereum;
   const hex = (await ethereum.request({
     method: "eth_getBalance",
@@ -51,7 +52,9 @@ async function getNativeOumBalance(addr: `0x${string}`): Promise<string> {
 }
 
 async function addTokenToMetaMask() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   if (typeof window === "undefined" || !(window as any).ethereum) return;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const ethereum = (window as any).ethereum;
   try {
     await ethereum.request({
@@ -543,21 +546,19 @@ function PageContent() {
           <div className="mb-4 inline-flex rounded-xl border border-gray-200 p-1 dark:border-gray-800">
             <button
               onClick={() => setActiveTab("buy")}
-              className={`rounded-lg px-3 py-1.5 text-sm font-medium ${
-                activeTab === "buy"
-                  ? "bg-gray-900 text-white dark:bg-white dark:text-gray-900"
-                  : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/5"
-              }`}
+              className={`rounded-lg px-3 py-1.5 text-sm font-medium ${activeTab === "buy"
+                ? "bg-gray-900 text-white dark:bg-white dark:text-gray-900"
+                : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/5"
+                }`}
             >
               Buy & Mint
             </button>
             <button
               onClick={() => setActiveTab("burn")}
-              className={`rounded-lg px-3 py-1.5 text-sm font-medium ${
-                activeTab === "burn"
-                  ? "bg-gray-900 text-white dark:bg-white dark:text-gray-900"
-                  : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg.white/5"
-              }`}
+              className={`rounded-lg px-3 py-1.5 text-sm font-medium ${activeTab === "burn"
+                ? "bg-gray-900 text-white dark:bg-white dark:text-gray-900"
+                : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg.white/5"
+                }`}
             >
               Redeem & Burn
             </button>
@@ -606,9 +607,8 @@ function PageContent() {
                 <button
                   disabled={!canBuy}
                   onClick={onMint}
-                  className={`rounded-lg px-4 py-2 text-sm font-semibold shadow-theme-xs ${
-                    canBuy ? "bg-emerald-600 text-white hover:bg-emerald-700" : "cursor-not-allowed bg-gray-300 text-gray-500"
-                  }`}
+                  className={`rounded-lg px-4 py-2 text-sm font-semibold shadow-theme-xs ${canBuy ? "bg-emerald-600 text-white hover:bg-emerald-700" : "cursor-not-allowed bg-gray-300 text-gray-500"
+                    }`}
                 >
                   {mintState === "processing" ? "Processing…" : "Buy & Mint"}
                 </button>
@@ -706,9 +706,8 @@ function PageContent() {
                 <button
                   disabled={!canBurn}
                   onClick={onBurnClick}
-                  className={`rounded-lg px-4 py-2 text-sm font-semibold shadow-theme-xs ${
-                    canBurn ? "bg-purple-600 text-white hover:bg-purple-700" : "cursor-not-allowed bg-gray-300 text-gray-500"
-                  }`}
+                  className={`rounded-lg px-4 py-2 text-sm font-semibold shadow-theme-xs ${canBurn ? "bg-purple-600 text-white hover:bg-purple-700" : "cursor-not-allowed bg-gray-300 text-gray-500"
+                    }`}
                 >
                   {burnState === "processing" ? "Processing…" : "Redeem & Burn"}
                 </button>
@@ -781,13 +780,12 @@ function PageContent() {
               {activity.map((a) => (
                 <li key={a.id} className="flex items-start gap-3 rounded-xl border border-gray-200 p-3 dark:border-gray-800">
                   <span
-                    className={`mt-0.5 inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-medium ${
-                      a.type === "Credit"
-                        ? "border-blue-300 bg-blue-500/10 text-blue-700 dark:border-blue-800 dark:text-blue-400"
-                        : a.type === "Purchase"
+                    className={`mt-0.5 inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-medium ${a.type === "Credit"
+                      ? "border-blue-300 bg-blue-500/10 text-blue-700 dark:border-blue-800 dark:text-blue-400"
+                      : a.type === "Purchase"
                         ? "border-emerald-300 bg-emerald-500/10 text-emerald-700 dark:border-emerald-800 dark:text-emerald-400"
                         : "border-purple-300 bg-purple-500/10 text-purple-700 dark:border-purple-800 dark:text-purple-400"
-                    }`}
+                      }`}
                   >
                     {a.type}
                   </span>

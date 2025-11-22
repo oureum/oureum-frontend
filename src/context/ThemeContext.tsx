@@ -1,58 +1,29 @@
 "use client";
 
-import type React from "react";
-import { createContext, useState, useContext, useEffect } from "react";
+import * as React from "react";
+import { ThemeProvider as NextThemesProvider, useTheme as useNextTheme } from "next-themes";
 
-type Theme = "light" | "dark";
-
-type ThemeContextType = {
-  theme: Theme;
-  toggleTheme: () => void;
-};
-
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
-
-export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
-  const [theme, setTheme] = useState<Theme>("dark");
-  const [isInitialized, setIsInitialized] = useState(false);
-
-  useEffect(() => {
-    // This code will only run on the client side
-    const savedTheme = localStorage.getItem("theme") as Theme | null;
-    const initialTheme = savedTheme || "dark"; // Default to dark theme
-
-    setTheme(initialTheme);
-    setIsInitialized(true);
-  }, []);
-
-  useEffect(() => {
-    if (isInitialized) {
-      localStorage.setItem("theme", theme);
-      if (theme === "dark") {
-        document.documentElement.classList.add("dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-      }
-    }
-  }, [theme, isInitialized]);
-
-  const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
-  };
-
+export function ThemeProvider({ children, ...props }: React.ComponentProps<typeof NextThemesProvider>) {
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <NextThemesProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      disableTransitionOnChange
+      {...props}
+    >
       {children}
-    </ThemeContext.Provider>
+    </NextThemesProvider>
   );
-};
+}
 
 export const useTheme = () => {
-  const context = useContext(ThemeContext);
-  if (context === undefined) {
-    throw new Error("useTheme must be used within a ThemeProvider");
-  }
-  return context;
+  const { theme, setTheme, resolvedTheme } = useNextTheme();
+
+  // Maintain compatibility with existing code that expects toggleTheme
+  const toggleTheme = () => {
+    setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
+  };
+
+  return { theme, setTheme, resolvedTheme, toggleTheme };
 };
