@@ -1,43 +1,100 @@
-// app/page.tsx
 "use client";
 
 import Link from "next/link";
+import { ArrowRight, ShieldCheck, User, Sun, Moon } from "lucide-react";
+import { useTheme } from "@/context/ThemeContext";
 
 export default function Home() {
+  const { theme, toggleTheme } = useTheme();
+
   return (
-    <main className="min-h-screen bg-gradient-to-b from-white to-gray-50 dark:from-gray-950 dark:to-gray-900">
-      <div className="mx-auto max-w-3xl px-6 py-24">
+    <main className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-gray-50 dark:bg-[#0a0a0a] transition-colors duration-300">
+
+      {/* Theme Toggle */}
+      <button
+        onClick={toggleTheme}
+        className="absolute top-6 right-6 p-2 rounded-full bg-white/10 hover:bg-white/20 dark:bg-white/5 dark:hover:bg-white/10 border border-gray-200 dark:border-white/10 transition-all z-50"
+        aria-label="Toggle Theme"
+      >
+        {theme === 'dark' ? (
+          <Sun className="w-5 h-5 text-yellow-500" />
+        ) : (
+          <Moon className="w-5 h-5 text-gray-700" />
+        )}
+      </button>
+
+      {/* Background Effects (Dark Mode Only) */}
+      <div className="absolute inset-0 z-0 opacity-0 dark:opacity-100 transition-opacity duration-500 pointer-events-none">
+        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#D4AF37]/10 via-[#0a0a0a] to-[#0a0a0a]" />
+        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-[#D4AF37]/5 rounded-full blur-[120px]" />
+      </div>
+
+      <div className="relative z-10 mx-auto max-w-5xl px-6 py-24 text-center">
         {/* Brand / Title */}
-        <div className="text-center">
-          <h1 className="text-3xl font-semibold tracking-tight text-gray-900 dark:text-white">
-            Oureum System
+        <div className="mb-12">
+          <div className="inline-block mb-4 px-4 py-1.5 rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/10 text-[#D4AF37] text-sm font-medium tracking-wide">
+            Internal System
+          </div>
+          <h1 className="text-5xl md:text-7xl font-bold tracking-tighter text-gray-900 dark:text-white mb-6">
+            OUREUM <span className="text-[#D4AF37]">CORE</span>
           </h1>
-          <p className="mt-3 text-sm text-gray-600 dark:text-gray-400">
-            Internal tools for pricing, gold ledger, OUMG mint/burn ops, and admin workflows.
+          <p className="mt-4 text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+            Secure gateway for pricing oracles, gold ledger management, and OUMG mint/burn operations.
           </p>
         </div>
 
-        {/* Actions */}
-        <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+        {/* Actions Grid */}
+        <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+          {/* Admin Portal Card */}
           <Link
             href="/admin/signin"
-            className="inline-flex items-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-800 shadow-theme-xs hover:bg-gray-50 focus:outline-hidden focus:ring-2 focus:ring-gray-200 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-100 dark:hover:bg-white/[0.03]"
+            className="group relative overflow-hidden rounded-2xl border border-gray-200 dark:border-white/10 bg-white dark:bg-white/5 p-8 hover:border-[#D4AF37]/50 hover:shadow-lg dark:hover:bg-[#D4AF37]/5 transition-all duration-300 text-left"
           >
-            Enter Admin Portal
+            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+              <ShieldCheck className="w-24 h-24 text-[#D4AF37]" />
+            </div>
+            <div className="relative z-10">
+              <div className="h-12 w-12 rounded-lg bg-[#D4AF37]/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <ShieldCheck className="w-6 h-6 text-[#D4AF37]" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Admin Portal</h3>
+              <p className="text-gray-500 dark:text-gray-400 mb-6 text-sm">
+                Restricted access for system administrators. Requires hardware wallet signature.
+              </p>
+              <span className="inline-flex items-center text-[#D4AF37] font-medium group-hover:translate-x-2 transition-transform">
+                Enter Portal <ArrowRight className="ml-2 w-4 h-4" />
+              </span>
+            </div>
           </Link>
 
+          {/* User App Card */}
           <Link
             href="/user/login"
-            className="inline-flex items-center rounded-lg border border-transparent bg-gray-900 px-4 py-2 text-sm font-medium text-white shadow-theme-xs hover:bg-black/90 focus:outline-hidden focus:ring-2 focus:ring-gray-300 dark:bg-white dark:text-gray-900 dark:hover:bg-white/90"
+            className="group relative overflow-hidden rounded-2xl border border-gray-200 dark:border-white/10 bg-white dark:bg-white/5 p-8 hover:border-gray-300 dark:hover:border-white/20 hover:shadow-lg dark:hover:bg-white/10 transition-all duration-300 text-left"
           >
-            Go to User App
+            <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+              <User className="w-24 h-24 text-gray-900 dark:text-white" />
+            </div>
+            <div className="relative z-10">
+              <div className="h-12 w-12 rounded-lg bg-gray-100 dark:bg-white/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <User className="w-6 h-6 text-gray-900 dark:text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">User App</h3>
+              <p className="text-gray-500 dark:text-gray-400 mb-6 text-sm">
+                Client-facing dashboard for asset management and transfers.
+              </p>
+              <span className="inline-flex items-center text-gray-900 dark:text-white font-medium group-hover:translate-x-2 transition-transform">
+                Launch App <ArrowRight className="ml-2 w-4 h-4" />
+              </span>
+            </div>
           </Link>
         </div>
 
         {/* Footnote */}
-        <p className="mt-10 text-center text-xs text-gray-500 dark:text-gray-500">
-          Access is restricted. Admin routes require a connected admin wallet.
-        </p>
+        <div className="mt-16 flex items-center justify-center gap-2 text-xs text-gray-500 dark:text-gray-600">
+          <div className="h-1.5 w-1.5 rounded-full bg-[#D4AF37] animate-pulse" />
+          System Status: Operational
+        </div>
       </div>
     </main>
   );
