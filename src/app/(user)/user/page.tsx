@@ -400,449 +400,457 @@ function PageContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 px-6 py-8 dark:bg-gray-900">
-      {/* Header */}
-      <div className="mx-auto mb-4 flex max-w-5xl items-center justify-end">
-        <div className="flex items-center gap-3">
-          <ThemeToggleButton />
-          <button
-            onClick={onLogout}
-            className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-200 dark:hover:bg-white/5"
-          >
-            Logout
-          </button>
-        </div>
-      </div>
-      <div className="mx-auto mb-8 max-w-5xl">
-        <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">Oureum — User Wallet</h1>
-        <p className="mt-1 text-sm">
-          <span className="text-emerald-600 dark:text-emerald-400">Buy RM {priceBuy.toFixed(2)}/g</span>
-          {" · "}
-          <span className="text-rose-600 dark:text-rose-400">Sell RM {priceSell.toFixed(2)}/g</span>
-        </p>
+    <div className="relative min-h-screen bg-gray-50 px-6 py-8 dark:bg-[#0a0a0a] transition-colors duration-300 overflow-hidden">
+      {/* Background Effects (Dark Mode Only) */}
+      <div className="absolute inset-0 z-0 opacity-0 dark:opacity-100 transition-opacity duration-500 pointer-events-none">
+        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#D4AF37]/10 via-[#0a0a0a] to-[#0a0a0a]" />
+        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-[#D4AF37]/5 rounded-full blur-[120px]" />
       </div>
 
-      {errorText && (
-        <div className="mx-auto mb-6 max-w-5xl rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-900/40 dark:bg-red-950/30 dark:text-red-300">
-          {errorText}
-        </div>
-      )}
-
-      <div className="mx-auto max-w-5xl">
-        {/* 1) Balances */}
-        <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-2">
-          <BalanceCard label="RM Credits" value={formatRM(rmBalance)} color="brand" />
-          <BalanceCard label="OUMG Balance" value={`${gBalance.toFixed(4)} g`} color="emerald" />
-        </div>
-
-        {/* 2) Wallet Info */}
-        <div className="mb-8 rounded-2xl border border-gray-200 bg-white p-5 shadow-theme-lg dark:border-gray-800 dark:bg-gray-900">
-          <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">Wallet Info</h2>
-          <dl className="mt-3 grid grid-cols-1 gap-x-6 gap-y-3 text-sm sm:grid-cols-2">
-            {/* Account */}
-            <div className="flex items-center gap-2">
-              <div className="min-w-28 text-gray-500 dark:text-gray-400">Account</div>
-              <div className="font-medium text-gray-800 dark:text-gray-100">{shortAddress(wallet)}</div>
-              <button
-                onClick={copyWallet}
-                className="rounded-md border border-gray-200 px-2 py-1 text-xs text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-white/5"
-                title="Copy address"
-              >
-                {copiedKey === "wallet" ? "Copied" : "Copy"}
-              </button>
-            </div>
-
-            {/* Effective Price */}
-            <div className="flex items-center gap-2">
-              <div className="min-w-28 text-gray-500 dark:text-gray-400">Effective Price</div>
-              <div className="font-medium">
-                <span className="text-emerald-600 dark:text-emerald-400">Buy RM {priceBuy.toFixed(2)}/g</span> ·{" "}
-                <span className="text-rose-600 dark:text-rose-400">Sell RM {priceSell.toFixed(2)}/g</span>
-              </div>
-            </div>
-
-            {/* RM Credits */}
-            <div className="flex items-center gap-2">
-              <div className="min-w-28 text-gray-500 dark:text-gray-400">RM Credits</div>
-              <div className="font-medium text-gray-800 dark:text-gray-100">{formatRM(rmBalance)}</div>
-            </div>
-
-            {/* OUM (native) */}
-            <div className="flex items-center gap-2">
-              <div className="min-w-28 text-gray-500 dark:text-gray-400">OUM</div>
-              <div className="font-medium text-gray-800 dark:text-gray-100">{nativeOum} OUM</div>
-            </div>
-
-            {/* OUMG balance (new row between OUM and Token Address) */}
-            <div className="flex items-center gap-2">
-              <div className="min-w-28 text-gray-500 dark:text-gray-400">OUMG</div>
-              <div className="font-medium text-gray-800 dark:text-gray-100">{gBalance.toFixed(4)} g</div>
-            </div>
-
-            {/* Token Address */}
-            <div className="flex items-center gap-2">
-              <div className="min-w-28 text-gray-500 dark:text-gray-400">Token Address</div>
-              <div className="font-medium text-gray-800 dark:text-gray-100">{shortAddress(OUMG_ADDRESS)}</div>
-              <button
-                onClick={copyTokenAddress}
-                title="Copy token address"
-                className="rounded-md border border-gray-200 px-2 py-1 text-xs text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-white/5"
-              >
-                {copiedKey === "token" ? "Copied" : "Copy"}
-              </button>
-              <button
-                onClick={addTokenToMetaMask}
-                title="Add to MetaMask"
-                className="rounded-md border border-gray-200 px-2 py-1 text-xs text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-white/5"
-              >
-                Add
-              </button>
-            </div>
-          </dl>
-
-          {/* Projected After Purchase */}
-          {g > 0 && (
-            <div className="mt-4 rounded-xl border border-gray-200 p-4 text-sm dark:border-gray-800">
-              <div className="mb-2 font-semibold text-gray-800 dark:text-gray-200">Projected After Purchase</div>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <div className="text-gray-500 dark:text-gray-400">RM Credits</div>
-                  <div className="font-medium text-gray-800 dark:text-gray-100">{formatRM(projectedRm)}</div>
-                </div>
-                <div>
-                  <div className="text-gray-500 dark:text-gray-400">OUMG</div>
-                  <div className="font-medium text-gray-800 dark:text-gray-100">{projectedG.toFixed(4)} g</div>
-                </div>
-              </div>
-              <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                Based on current inputs (RM {cost || 0} → {g || 0} g).
-              </p>
-            </div>
-          )}
-
-          {/* Projected After Redeem */}
-          {burnGNum > 0 && (
-            <div className="mt-4 rounded-xl border border-gray-200 p-4 text-sm dark:border-gray-800">
-              <div className="mb-2 font-semibold text-gray-800 dark:text-gray-200">Projected After Redeem</div>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <div className="text-gray-500 dark:text-gray-400">RM Credits</div>
-                  <div className="font-medium text-gray-800 dark:text-gray-100">{formatRM(projectedRmAfterBurn)}</div>
-                </div>
-                <div>
-                  <div className="text-gray-500 dark:text-gray-400">OUMG</div>
-                  <div className="font-medium text-gray-800 dark:text-gray-100">{projectedGAfterBurn.toFixed(4)} g</div>
-                </div>
-              </div>
-              <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                Based on current inputs ({burnGNum || 0} g → RM {burnCreditMYR.toFixed(2)}).
-              </p>
-            </div>
-          )}
-        </div>
-
-        {/* 3) Token Ops Tabs */}
-        <div className="mb-8 rounded-2xl border border-gray-200 bg-white p-6 shadow-theme-lg dark:border-gray-800 dark:bg-gray-900">
-          <div className="mb-4 inline-flex rounded-xl border border-gray-200 p-1 dark:border-gray-800">
+      <div className="relative z-10">
+        {/* Header */}
+        <div className="mx-auto mb-4 flex max-w-5xl items-center justify-end">
+          <div className="flex items-center gap-3">
+            <ThemeToggleButton />
             <button
-              onClick={() => setActiveTab("buy")}
-              className={`rounded-lg px-3 py-1.5 text-sm font-medium ${activeTab === "buy"
-                ? "bg-gray-900 text-white dark:bg-white dark:text-gray-900"
-                : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/5"
-                }`}
+              onClick={onLogout}
+              className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 dark:border-white/10 dark:bg-white/5 dark:text-gray-200 dark:hover:bg-white/10"
             >
-              Buy & Mint
-            </button>
-            <button
-              onClick={() => setActiveTab("burn")}
-              className={`rounded-lg px-3 py-1.5 text-sm font-medium ${activeTab === "burn"
-                ? "bg-gray-900 text-white dark:bg-white dark:text-gray-900"
-                : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg.white/5"
-                }`}
-            >
-              Redeem & Burn
+              Logout
             </button>
           </div>
-
-          {activeTab === "buy" && (
-            <>
-              <h2 className="mb-4 text-sm font-semibold text-gray-700 dark:text-gray-300">Buy & Mint</h2>
-
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div>
-                  <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">Ringgit (MYR)</label>
-                  <input
-                    value={ringgit}
-                    onChange={(e) => syncByRinggit(e.target.value)}
-                    inputMode="decimal"
-                    placeholder="e.g. 1000"
-                    className="h-11 w-full rounded-lg border border-gray-200 px-3 text-sm text-gray-800 dark:border-gray-800 dark:bg-gray-900 dark:text-white/90"
-                  />
-                </div>
-                <div>
-                  <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">OUMG (grams)</label>
-                  <input
-                    value={grams}
-                    onChange={(e) => syncByGrams(e.target.value)}
-                    inputMode="decimal"
-                    placeholder="e.g. 2"
-                    className="h-11 w-full rounded-lg border border-gray-200 px-3 text-sm text-gray-800 dark:border-gray-800 dark:bg-gray-900 dark:text-white/90"
-                  />
-                </div>
-              </div>
-
-              <div className="mt-3 text-xs">
-                <div className="text-gray-500 dark:text-gray-400">
-                  Effective price:{" "}
-                  <span className="font-medium text-emerald-700 dark:text-emerald-300">RM {priceBuy.toFixed(2)}/g</span>
-                </div>
-                {exceeded && (
-                  <div className="mt-1 font-medium text-red-600 dark:text-red-400">
-                    Insufficient RM credits. Required {formatRM(cost)} &nbsp;|&nbsp; Available {formatRM(rmBalance)}
-                  </div>
-                )}
-              </div>
-
-              <div className="mt-4 flex items-center justify-end">
-                <button
-                  disabled={!canBuy}
-                  onClick={onMint}
-                  className={`rounded-lg px-4 py-2 text-sm font-semibold shadow-theme-xs ${canBuy ? "bg-emerald-600 text-white hover:bg-emerald-700" : "cursor-not-allowed bg-gray-300 text-gray-500"
-                    }`}
-                >
-                  {mintState === "processing" ? "Processing…" : "Buy & Mint"}
-                </button>
-              </div>
-
-              {/* Minting flow (dark mode friendly) */}
-              {mintState !== "idle" && (
-                <div className="mt-6 rounded-xl border border-gray-200 p-4 text-sm dark:border-gray-800">
-                  {mintState === "processing" && (
-                    <>
-                      <div className="font-medium text-gray-800 dark:text-gray-200">Minting in progress</div>
-                      <ol className="mt-4 space-y-2 text-gray-800 dark:text-gray-200">
-                        <li>Step {step >= 1 ? "✅" : "⏳"} Reserve RM balance</li>
-                        <li>Step {step >= 2 ? "✅" : "⏳"} Mint OUMG on chain</li>
-                        <li>Step {step >= 3 ? "✅" : "⏳"} Finalize & update balances</li>
-                      </ol>
-                    </>
-                  )}
-                  {mintState === "success" && (
-                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                      <div>
-                        <div className="font-semibold text-emerald-600 dark:text-emerald-400">✅ Minting Success</div>
-                        <div className="text-xs text-gray-500 dark:text-gray-400">
-                          Tx:&nbsp;
-                          {txHash ? (
-                            <a
-                              href={`${EXPLORER_TX_BASE}${txHash}`}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="underline decoration-dotted hover:text-emerald-700 dark:hover:text-emerald-300"
-                            >
-                              {txHash.slice(0, 20)}…
-                            </a>
-                          ) : (
-                            "—"
-                          )}
-                        </div>
-                      </div>
-                      <button
-                        onClick={() => {
-                          setMintState("idle");
-                          setStep(0);
-                          setTxHash(null);
-                        }}
-                        className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-200 dark:hover:bg-white/5"
-                      >
-                        Close
-                      </button>
-                    </div>
-                  )}
-                  {mintState === "error" && (
-                    <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-red-700 dark:border-red-900/40 dark:bg-red-950/30 dark:text-red-300">
-                      {errorText || "Mint failed."}
-                    </div>
-                  )}
-                </div>
-              )}
-            </>
-          )}
-
-          {activeTab === "burn" && (
-            <>
-              <h2 className="mb-4 text-sm font-semibold text-gray-700 dark:text-gray-300">Redeem & Burn</h2>
-
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div>
-                  <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">OUMG (grams)</label>
-                  <input
-                    value={burnG}
-                    onChange={(e) => setBurnG(e.target.value)}
-                    inputMode="decimal"
-                    placeholder="e.g. 0.5"
-                    className="h-11 w-full rounded-lg border border-gray-200 px-3 text-sm text-gray-800 dark:border-gray-800 dark:bg-gray-900 dark:text-white/90"
-                  />
-                  {burnExceeded && (
-                    <div className="mt-1 text-xs font-medium text-red-600 dark:text-red-400">
-                      Insufficient OUMG. Required {Number(burnG || 0).toFixed(4)} g · Available {gBalance.toFixed(4)} g
-                    </div>
-                  )}
-                </div>
-                <div>
-                  <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">You will receive (MYR)</label>
-                  <input
-                    value={burnCreditMYR ? burnCreditMYR.toFixed(2) : ""}
-                    readOnly
-                    className="h-11 w-full rounded-lg border border-gray-200 bg-gray-50 px-3 text-sm text-gray-500 dark:border-gray-800 dark:bg-gray-800 dark:text-gray-300"
-                  />
-                  <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                    Sell price: <span className="font-medium text-rose-600 dark:text-rose-400">RM {priceSell.toFixed(2)}/g</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-4 flex items-center justify-end">
-                <button
-                  disabled={!canBurn}
-                  onClick={onBurnClick}
-                  className={`rounded-lg px-4 py-2 text-sm font-semibold shadow-theme-xs ${canBurn ? "bg-purple-600 text-white hover:bg-purple-700" : "cursor-not-allowed bg-gray-300 text-gray-500"
-                    }`}
-                >
-                  {burnState === "processing" ? "Processing…" : "Redeem & Burn"}
-                </button>
-              </div>
-
-              {/* Burn flow (dark mode friendly) */}
-              {burnState !== "idle" && (
-                <div className="mt-6 rounded-xl border border-gray-200 p-4 text-sm dark:border-gray-800">
-                  {burnState === "processing" && (
-                    <>
-                      <div className="font-medium text-gray-800 dark:text-gray-200">Burn in progress</div>
-                      <ol className="mt-4 space-y-2 text-gray-800 dark:text-gray-200">
-                        <li>Step {burnStep >= 1 ? "✅" : "⏳"} Reserve OUMG</li>
-                        <li>Step {burnStep >= 2 ? "✅" : "⏳"} Burn on chain</li>
-                        <li>Step {burnStep >= 3 ? "✅" : "⏳"} Finalize & credit RM</li>
-                      </ol>
-                    </>
-                  )}
-                  {burnState === "success" && (
-                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                      <div>
-                        <div className="font-semibold text-emerald-600 dark:text-emerald-400">✅ Burn Success</div>
-                        <div className="text-xs text-gray-500 dark:text-gray-400">
-                          Tx:&nbsp;
-                          {burnTxHash ? (
-                            <a
-                              href={`${EXPLORER_TX_BASE}${burnTxHash}`}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="underline decoration-dotted hover:text-emerald-700 dark:hover:text-emerald-300"
-                            >
-                              {burnTxHash.slice(0, 20)}…
-                            </a>
-                          ) : (
-                            "—"
-                          )}
-                        </div>
-                      </div>
-                      <button
-                        onClick={() => {
-                          setBurnState("idle");
-                          setBurnStep(0);
-                          setBurnTxHash(null);
-                        }}
-                        className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-200 dark:hover:bg-white/5"
-                      >
-                        Close
-                      </button>
-                    </div>
-                  )}
-                  {burnState === "error" && (
-                    <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-red-700 dark:border-red-900/40 dark:bg-red-950/30 dark:text-red-300">
-                      {errorText || "Burn failed."}
-                    </div>
-                  )}
-                </div>
-              )}
-            </>
-          )}
+        </div>
+        <div className="mx-auto mb-8 max-w-5xl">
+          <h1 className="text-2xl font-bold text-gray-800 dark:text-[#D4AF37]">Oureum — User Wallet</h1>
+          <p className="mt-1 text-sm">
+            <span className="text-emerald-600 dark:text-emerald-400">Buy RM {priceBuy.toFixed(2)}/g</span>
+            {" · "}
+            <span className="text-rose-600 dark:text-rose-400">Sell RM {priceSell.toFixed(2)}/g</span>
+          </p>
         </div>
 
-        {/* 4) Recent Activity */}
-        <div className="grid grid-cols-1 gap-4 md:gap-6 xl:grid-cols-12">
-          <div className="rounded-2xl border border-gray-200 bg-white shadow-theme-lg dark:border-gray-800 dark:bg-gray-900 xl:col-span-12">
-            <div className="border-b border-gray-200 px-5 py-4 dark:border-gray-800">
-              <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">Recent Activity</h2>
+        {errorText && (
+          <div className="mx-auto mb-6 max-w-5xl rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-900/40 dark:bg-red-950/30 dark:text-red-300">
+            {errorText}
+          </div>
+        )}
+
+        <div className="mx-auto max-w-5xl">
+          {/* 1) Balances */}
+          <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-2">
+            <BalanceCard label="RM Credits" value={formatRM(rmBalance)} color="brand" />
+            <BalanceCard label="OUMG Balance" value={`${gBalance.toFixed(4)} g`} color="emerald" />
+          </div>
+
+          {/* 2) Wallet Info */}
+          <div className="mb-8 rounded-2xl border border-gray-200 bg-white p-5 shadow-theme-lg dark:border-white/10 dark:bg-white/5">
+            <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">Wallet Info</h2>
+            <dl className="mt-3 grid grid-cols-1 gap-x-6 gap-y-3 text-sm sm:grid-cols-2">
+              {/* Account */}
+              <div className="flex items-center gap-2">
+                <div className="min-w-28 text-gray-500 dark:text-gray-400">Account</div>
+                <div className="font-medium text-gray-800 dark:text-gray-100">{shortAddress(wallet)}</div>
+                <button
+                  onClick={copyWallet}
+                  className="rounded-md border border-gray-200 px-2 py-1 text-xs text-gray-700 hover:bg-gray-50 dark:border-white/10 dark:text-gray-200 dark:hover:bg-white/10"
+                  title="Copy address"
+                >
+                  {copiedKey === "wallet" ? "Copied" : "Copy"}
+                </button>
+              </div>
+
+              {/* Effective Price */}
+              <div className="flex items-center gap-2">
+                <div className="min-w-28 text-gray-500 dark:text-gray-400">Effective Price</div>
+                <div className="font-medium">
+                  <span className="text-emerald-600 dark:text-emerald-400">Buy RM {priceBuy.toFixed(2)}/g</span> ·{" "}
+                  <span className="text-rose-600 dark:text-rose-400">Sell RM {priceSell.toFixed(2)}/g</span>
+                </div>
+              </div>
+
+              {/* RM Credits */}
+              <div className="flex items-center gap-2">
+                <div className="min-w-28 text-gray-500 dark:text-gray-400">RM Credits</div>
+                <div className="font-medium text-gray-800 dark:text-gray-100">{formatRM(rmBalance)}</div>
+              </div>
+
+              {/* OUM (native) */}
+              <div className="flex items-center gap-2">
+                <div className="min-w-28 text-gray-500 dark:text-gray-400">OUM</div>
+                <div className="font-medium text-gray-800 dark:text-gray-100">{nativeOum} OUM</div>
+              </div>
+
+              {/* OUMG balance (new row between OUM and Token Address) */}
+              <div className="flex items-center gap-2">
+                <div className="min-w-28 text-gray-500 dark:text-gray-400">OUMG</div>
+                <div className="font-medium text-gray-800 dark:text-gray-100">{gBalance.toFixed(4)} g</div>
+              </div>
+
+              {/* Token Address */}
+              <div className="flex items-center gap-2">
+                <div className="min-w-28 text-gray-500 dark:text-gray-400">Token Address</div>
+                <div className="font-medium text-gray-800 dark:text-gray-100">{shortAddress(OUMG_ADDRESS)}</div>
+                <button
+                  onClick={copyTokenAddress}
+                  title="Copy token address"
+                  className="rounded-md border border-gray-200 px-2 py-1 text-xs text-gray-700 hover:bg-gray-50 dark:border-white/10 dark:text-gray-200 dark:hover:bg-white/10"
+                >
+                  {copiedKey === "token" ? "Copied" : "Copy"}
+                </button>
+                <button
+                  onClick={addTokenToMetaMask}
+                  title="Add to MetaMask"
+                  className="rounded-md border border-gray-200 px-2 py-1 text-xs text-gray-700 hover:bg-gray-50 dark:border-white/10 dark:text-gray-200 dark:hover:bg-white/10"
+                >
+                  Add
+                </button>
+              </div>
+            </dl>
+
+            {/* Projected After Purchase */}
+            {g > 0 && (
+              <div className="mt-4 rounded-xl border border-gray-200 p-4 text-sm dark:border-white/10 dark:bg-white/5">
+                <div className="mb-2 font-semibold text-gray-800 dark:text-gray-200">Projected After Purchase</div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <div className="text-gray-500 dark:text-gray-400">RM Credits</div>
+                    <div className="font-medium text-gray-800 dark:text-gray-100">{formatRM(projectedRm)}</div>
+                  </div>
+                  <div>
+                    <div className="text-gray-500 dark:text-gray-400">OUMG</div>
+                    <div className="font-medium text-gray-800 dark:text-gray-100">{projectedG.toFixed(4)} g</div>
+                  </div>
+                </div>
+                <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                  Based on current inputs (RM {cost || 0} → {g || 0} g).
+                </p>
+              </div>
+            )}
+
+            {/* Projected After Redeem */}
+            {burnGNum > 0 && (
+              <div className="mt-4 rounded-xl border border-gray-200 p-4 text-sm dark:border-white/10 dark:bg-white/5">
+                <div className="mb-2 font-semibold text-gray-800 dark:text-gray-200">Projected After Redeem</div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <div className="text-gray-500 dark:text-gray-400">RM Credits</div>
+                    <div className="font-medium text-gray-800 dark:text-gray-100">{formatRM(projectedRmAfterBurn)}</div>
+                  </div>
+                  <div>
+                    <div className="text-gray-500 dark:text-gray-400">OUMG</div>
+                    <div className="font-medium text-gray-800 dark:text-gray-100">{projectedGAfterBurn.toFixed(4)} g</div>
+                  </div>
+                </div>
+                <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                  Based on current inputs ({burnGNum || 0} g → RM {burnCreditMYR.toFixed(2)}).
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* 3) Token Ops Tabs */}
+          <div className="mb-8 rounded-2xl border border-gray-200 bg-white p-6 shadow-theme-lg dark:border-white/10 dark:bg-white/5">
+            <div className="mb-4 inline-flex rounded-xl border border-gray-200 p-1 dark:border-white/10">
+              <button
+                onClick={() => setActiveTab("buy")}
+                className={`rounded-lg px-3 py-1.5 text-sm font-medium ${activeTab === "buy"
+                  ? "bg-gray-900 text-white dark:bg-white dark:text-gray-900"
+                  : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/5"
+                  }`}
+              >
+                Buy & Mint
+              </button>
+              <button
+                onClick={() => setActiveTab("burn")}
+                className={`rounded-lg px-3 py-1.5 text-sm font-medium ${activeTab === "burn"
+                  ? "bg-gray-900 text-white dark:bg-white dark:text-gray-900"
+                  : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg.white/5"
+                  }`}
+              >
+                Redeem & Burn
+              </button>
             </div>
-            <ul className="space-y-3 p-5">
-              {activity.length === 0 && <li className="text-xs text-gray-500 dark:text-gray-400">No activity yet.</li>}
-              {activity.map((a) => (
-                <li key={a.id} className="flex items-start gap-3 rounded-xl border border-gray-200 p-3 dark:border-gray-800">
-                  <span
-                    className={`mt-0.5 inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-medium ${a.type === "Credit"
-                      ? "border-blue-300 bg-blue-500/10 text-blue-700 dark:border-blue-800 dark:text-blue-400"
-                      : a.type === "Purchase"
-                        ? "border-emerald-300 bg-emerald-500/10 text-emerald-700 dark:border-emerald-800 dark:text-emerald-400"
-                        : "border-purple-300 bg-purple-500/10 text-purple-700 dark:border-purple-800 dark:text-purple-400"
+
+            {activeTab === "buy" && (
+              <>
+                <h2 className="mb-4 text-sm font-semibold text-gray-700 dark:text-gray-300">Buy & Mint</h2>
+
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div>
+                    <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">Ringgit (MYR)</label>
+                    <input
+                      value={ringgit}
+                      onChange={(e) => syncByRinggit(e.target.value)}
+                      inputMode="decimal"
+                      placeholder="e.g. 1000"
+                      className="h-11 w-full rounded-lg border border-gray-200 px-3 text-sm text-gray-800 dark:border-white/10 dark:bg-white/5 dark:text-white/90"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">OUMG (grams)</label>
+                    <input
+                      value={grams}
+                      onChange={(e) => syncByGrams(e.target.value)}
+                      inputMode="decimal"
+                      placeholder="e.g. 2"
+                      className="h-11 w-full rounded-lg border border-gray-200 px-3 text-sm text-gray-800 dark:border-white/10 dark:bg-white/5 dark:text-white/90"
+                    />
+                  </div>
+                </div>
+
+                <div className="mt-3 text-xs">
+                  <div className="text-gray-500 dark:text-gray-400">
+                    Effective price:{" "}
+                    <span className="font-medium text-emerald-700 dark:text-emerald-300">RM {priceBuy.toFixed(2)}/g</span>
+                  </div>
+                  {exceeded && (
+                    <div className="mt-1 font-medium text-red-600 dark:text-red-400">
+                      Insufficient RM credits. Required {formatRM(cost)} &nbsp;|&nbsp; Available {formatRM(rmBalance)}
+                    </div>
+                  )}
+                </div>
+
+                <div className="mt-4 flex items-center justify-end">
+                  <button
+                    disabled={!canBuy}
+                    onClick={onMint}
+                    className={`rounded-lg px-4 py-2 text-sm font-semibold shadow-theme-xs ${canBuy ? "bg-emerald-600 text-white hover:bg-emerald-700" : "cursor-not-allowed bg-gray-300 text-gray-500"
                       }`}
                   >
-                    {a.type}
-                  </span>
-                  <div className="flex-1">
-                    <div className="text-sm text-gray-800 dark:text-gray-200">{a.detail}</div>
-                    <div className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
-                      {a.when}
-                      {a.txHash && (
-                        <>
-                          {" "}|{" "}
-                          <a
-                            href={`${EXPLORER_TX_BASE}${a.txHash}`}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="underline decoration-dotted hover:text-gray-700 dark:hover:text-gray-300"
-                          >
-                            {a.txHash.slice(0, 10)}…
-                          </a>
-                        </>
-                      )}
+                    {mintState === "processing" ? "Processing…" : "Buy & Mint"}
+                  </button>
+                </div>
+
+                {/* Minting flow (dark mode friendly) */}
+                {mintState !== "idle" && (
+                  <div className="mt-6 rounded-xl border border-gray-200 p-4 text-sm dark:border-white/10 dark:bg-white/5">
+                    {mintState === "processing" && (
+                      <>
+                        <div className="font-medium text-gray-800 dark:text-gray-200">Minting in progress</div>
+                        <ol className="mt-4 space-y-2 text-gray-800 dark:text-gray-200">
+                          <li>Step {step >= 1 ? "✅" : "⏳"} Reserve RM balance</li>
+                          <li>Step {step >= 2 ? "✅" : "⏳"} Mint OUMG on chain</li>
+                          <li>Step {step >= 3 ? "✅" : "⏳"} Finalize & update balances</li>
+                        </ol>
+                      </>
+                    )}
+                    {mintState === "success" && (
+                      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                          <div className="font-semibold text-emerald-600 dark:text-emerald-400">✅ Minting Success</div>
+                          <div className="text-xs text-gray-500 dark:text-gray-400">
+                            Tx:&nbsp;
+                            {txHash ? (
+                              <a
+                                href={`${EXPLORER_TX_BASE}${txHash}`}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="underline decoration-dotted hover:text-emerald-700 dark:hover:text-emerald-300"
+                              >
+                                {txHash.slice(0, 20)}…
+                              </a>
+                            ) : (
+                              "—"
+                            )}
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => {
+                            setMintState("idle");
+                            setStep(0);
+                            setTxHash(null);
+                          }}
+                          className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 dark:border-white/10 dark:bg-white/5 dark:text-gray-200 dark:hover:bg-white/10"
+                        >
+                          Close
+                        </button>
+                      </div>
+                    )}
+                    {mintState === "error" && (
+                      <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-red-700 dark:border-red-900/40 dark:bg-red-950/30 dark:text-red-300">
+                        {errorText || "Mint failed."}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </>
+            )}
+
+            {activeTab === "burn" && (
+              <>
+                <h2 className="mb-4 text-sm font-semibold text-gray-700 dark:text-gray-300">Redeem & Burn</h2>
+
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div>
+                    <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">OUMG (grams)</label>
+                    <input
+                      value={burnG}
+                      onChange={(e) => setBurnG(e.target.value)}
+                      inputMode="decimal"
+                      placeholder="e.g. 0.5"
+                      className="h-11 w-full rounded-lg border border-gray-200 px-3 text-sm text-gray-800 dark:border-white/10 dark:bg-white/5 dark:text-white/90"
+                    />
+                    {burnExceeded && (
+                      <div className="mt-1 text-xs font-medium text-red-600 dark:text-red-400">
+                        Insufficient OUMG. Required {Number(burnG || 0).toFixed(4)} g · Available {gBalance.toFixed(4)} g
+                      </div>
+                    )}
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-sm text-gray-700 dark:text-gray-300">You will receive (MYR)</label>
+                    <input
+                      value={burnCreditMYR ? burnCreditMYR.toFixed(2) : ""}
+                      readOnly
+                      className="h-11 w-full rounded-lg border border-gray-200 bg-gray-50 px-3 text-sm text-gray-500 dark:border-gray-800 dark:bg-gray-800 dark:text-gray-300"
+                    />
+                    <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                      Sell price: <span className="font-medium text-rose-600 dark:text-rose-400">RM {priceSell.toFixed(2)}/g</span>
                     </div>
                   </div>
-                </li>
-              ))}
-            </ul>
+                </div>
+
+                <div className="mt-4 flex items-center justify-end">
+                  <button
+                    disabled={!canBurn}
+                    onClick={onBurnClick}
+                    className={`rounded-lg px-4 py-2 text-sm font-semibold shadow-theme-xs ${canBurn ? "bg-purple-600 text-white hover:bg-purple-700" : "cursor-not-allowed bg-gray-300 text-gray-500"
+                      }`}
+                  >
+                    {burnState === "processing" ? "Processing…" : "Redeem & Burn"}
+                  </button>
+                </div>
+
+                {/* Burn flow (dark mode friendly) */}
+                {burnState !== "idle" && (
+                  <div className="mt-6 rounded-xl border border-gray-200 p-4 text-sm dark:border-white/10 dark:bg-white/5">
+                    {burnState === "processing" && (
+                      <>
+                        <div className="font-medium text-gray-800 dark:text-gray-200">Burn in progress</div>
+                        <ol className="mt-4 space-y-2 text-gray-800 dark:text-gray-200">
+                          <li>Step {burnStep >= 1 ? "✅" : "⏳"} Reserve OUMG</li>
+                          <li>Step {burnStep >= 2 ? "✅" : "⏳"} Burn on chain</li>
+                          <li>Step {burnStep >= 3 ? "✅" : "⏳"} Finalize & credit RM</li>
+                        </ol>
+                      </>
+                    )}
+                    {burnState === "success" && (
+                      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                          <div className="font-semibold text-emerald-600 dark:text-emerald-400">✅ Burn Success</div>
+                          <div className="text-xs text-gray-500 dark:text-gray-400">
+                            Tx:&nbsp;
+                            {burnTxHash ? (
+                              <a
+                                href={`${EXPLORER_TX_BASE}${burnTxHash}`}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="underline decoration-dotted hover:text-emerald-700 dark:hover:text-emerald-300"
+                              >
+                                {burnTxHash.slice(0, 20)}…
+                              </a>
+                            ) : (
+                              "—"
+                            )}
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => {
+                            setBurnState("idle");
+                            setBurnStep(0);
+                            setBurnTxHash(null);
+                          }}
+                          className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 dark:border-white/10 dark:bg-white/5 dark:text-gray-200 dark:hover:bg-white/10"
+                        >
+                          Close
+                        </button>
+                      </div>
+                    )}
+                    {burnState === "error" && (
+                      <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-red-700 dark:border-red-900/40 dark:bg-red-950/30 dark:text-red-300">
+                        {errorText || "Burn failed."}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </>
+            )}
           </div>
+
+          {/* 4) Recent Activity */}
+          <div className="grid grid-cols-1 gap-4 md:gap-6 xl:grid-cols-12">
+            <div className="rounded-2xl border border-gray-200 bg-white shadow-theme-lg dark:border-white/10 dark:bg-white/5 xl:col-span-12">
+              <div className="border-b border-gray-200 px-5 py-4 dark:border-white/10">
+                <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">Recent Activity</h2>
+              </div>
+              <ul className="space-y-3 p-5">
+                {activity.length === 0 && <li className="text-xs text-gray-500 dark:text-gray-400">No activity yet.</li>}
+                {activity.map((a) => (
+                  <li key={a.id} className="flex items-start gap-3 rounded-xl border border-gray-200 p-3 dark:border-white/10 dark:bg-white/5">
+                    <span
+                      className={`mt-0.5 inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-medium ${a.type === "Credit"
+                        ? "border-blue-300 bg-blue-500/10 text-blue-700 dark:border-blue-800 dark:text-blue-400"
+                        : a.type === "Purchase"
+                          ? "border-emerald-300 bg-emerald-500/10 text-emerald-700 dark:border-emerald-800 dark:text-emerald-400"
+                          : "border-purple-300 bg-purple-500/10 text-purple-700 dark:border-purple-800 dark:text-purple-400"
+                        }`}
+                    >
+                      {a.type}
+                    </span>
+                    <div className="flex-1">
+                      <div className="text-sm text-gray-800 dark:text-gray-200">{a.detail}</div>
+                      <div className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
+                        {a.when}
+                        {a.txHash && (
+                          <>
+                            {" "}|{" "}
+                            <a
+                              href={`${EXPLORER_TX_BASE}${a.txHash}`}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="underline decoration-dotted hover:text-gray-700 dark:hover:text-gray-300"
+                            >
+                              {a.txHash.slice(0, 10)}…
+                            </a>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {/* Buy Confirm Modal */}
+          {showConfirm && (
+            <ConfirmModal
+              title="Review & Confirm"
+              rows={[
+                ["Action", "Buy & Mint"],
+                ["OUMG", `${g.toFixed(4)} g`],
+                ["Price", `RM ${priceBuy.toFixed(2)}/g`],
+                ["You pay", `${formatRM(cost)}`],
+              ]}
+              onCancel={() => setShowConfirm(false)}
+              onConfirm={confirmMint}
+            />
+          )}
+
+          {/* Burn Confirm Modal */}
+          {showBurnConfirm && (
+            <ConfirmModal
+              title="Review & Confirm"
+              rows={[
+                ["Action", "Redeem & Burn"],
+                ["OUMG", `${burnGNum.toFixed(4)} g`],
+                ["Price", `RM ${priceSell.toFixed(2)}/g`],
+                ["You receive", `${formatRM(burnCreditMYR)}`],
+              ]}
+              onCancel={() => setShowBurnConfirm(false)}
+              onConfirm={confirmBurn}
+            />
+          )}
         </div>
-
-        {/* Buy Confirm Modal */}
-        {showConfirm && (
-          <ConfirmModal
-            title="Review & Confirm"
-            rows={[
-              ["Action", "Buy & Mint"],
-              ["OUMG", `${g.toFixed(4)} g`],
-              ["Price", `RM ${priceBuy.toFixed(2)}/g`],
-              ["You pay", `${formatRM(cost)}`],
-            ]}
-            onCancel={() => setShowConfirm(false)}
-            onConfirm={confirmMint}
-          />
-        )}
-
-        {/* Burn Confirm Modal */}
-        {showBurnConfirm && (
-          <ConfirmModal
-            title="Review & Confirm"
-            rows={[
-              ["Action", "Redeem & Burn"],
-              ["OUMG", `${burnGNum.toFixed(4)} g`],
-              ["Price", `RM ${priceSell.toFixed(2)}/g`],
-              ["You receive", `${formatRM(burnCreditMYR)}`],
-            ]}
-            onCancel={() => setShowBurnConfirm(false)}
-            onConfirm={confirmBurn}
-          />
-        )}
       </div>
     </div>
   );
@@ -862,7 +870,7 @@ function BalanceCard({
     emerald: "bg-emerald-500/70",
   };
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-theme-lg dark:border-gray-800 dark:bg-gray-900">
+    <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-theme-lg dark:border-white/10 dark:bg-white/5">
       <div className="text-sm text-gray-500 dark:text-gray-400">{label}</div>
       <div className="mt-2 text-2xl font-bold text-gray-900 dark:text-white">{value}</div>
       <div className="mt-3 h-2 w-full rounded-full bg-gray-100 dark:bg-white/5">
@@ -884,9 +892,9 @@ function ConfirmModal({
   onConfirm: () => void;
 }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-      <div className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-5 shadow-xl dark:border-gray-800 dark:bg-gray-900">
-        <div className="mb-3 text-base font-semibold text-gray-800 dark:text-gray-100">{title}</div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm">
+      <div className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-5 shadow-xl dark:border-white/10 dark:bg-[#0a0a0a]">
+        <div className="mb-3 text-base font-semibold text-gray-800 dark:text-[#D4AF37]">{title}</div>
         <div className="space-y-2 text-sm">
           {rows.map(([k, v]) => (
             <div key={k} className="flex justify-between">
@@ -898,13 +906,13 @@ function ConfirmModal({
         <div className="mt-4 flex items-center justify-end gap-2">
           <button
             onClick={onCancel}
-            className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-200 dark:hover:bg-white/5"
+            className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 dark:border-white/10 dark:bg-white/5 dark:text-gray-200 dark:hover:bg-white/10"
           >
             Cancel
           </button>
           <button
             onClick={onConfirm}
-            className="rounded-lg bg-emerald-600 px-4 py-1.5 text-sm font-semibold text-white hover:bg-emerald-700"
+            className="rounded-lg bg-emerald-600 px-4 py-1.5 text-sm font-semibold text-white hover:bg-emerald-700 shadow-theme-xs"
           >
             Confirm
           </button>

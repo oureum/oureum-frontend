@@ -1,11 +1,17 @@
 "use client";
 
+import React from "react";
 import Link from "next/link";
 import { ArrowRight, ShieldCheck, User, Sun, Moon } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 
 export default function Home() {
   const { toggleTheme, resolvedTheme } = useTheme();
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <main className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-gray-50 dark:bg-[#0a0a0a] transition-colors duration-300">
@@ -16,11 +22,11 @@ export default function Home() {
         className="absolute top-6 right-6 p-2 rounded-full bg-white/10 hover:bg-white/20 dark:bg-white/5 dark:hover:bg-white/10 border border-gray-200 dark:border-white/10 transition-all z-50"
         aria-label="Toggle Theme"
       >
-        {resolvedTheme === 'dark' ? (
+        {mounted && (resolvedTheme === 'dark' ? (
           <Sun className="w-5 h-5 text-yellow-500" />
         ) : (
           <Moon className="w-5 h-5 text-gray-700" />
-        )}
+        ))}
       </button>
 
       {/* Background Effects (Dark Mode Only) */}

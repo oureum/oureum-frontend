@@ -15,26 +15,8 @@ import { readAdminSession } from "@/lib/adminAuth";
  * - If no valid session exists, the SignInForm (MetaMask login) is displayed.
  */
 export default function Home() {
-  const router = useRouter();
-  const [checked, setChecked] = React.useState(false);
-
-  React.useEffect(() => {
-    // Read the admin session (if any) from localStorage.
-    const { isAdmin } = readAdminSession();
-
-    if (isAdmin) {
-      // Already logged in → redirect to dashboard.
-      // If your dashboard is located at /admin, change to router.replace("/admin").
-      router.replace("/admin");
-    } else {
-      // No session → allow page to show login form.
-      setChecked(true);
-    }
-  }, [router]);
-
-  // Avoid flashing blank page before session check finishes.
-  if (!checked) return null;
-
-  // Show MetaMask login form when not authenticated.
+  // The session check and redirect are now handled within SignInForm.
+  // We render SignInForm immediately so its internal loading state (Grey Box)
+  // is visible during the initial load/SSR, preventing the "blank page" flash.
   return <SignInForm />;
 }
