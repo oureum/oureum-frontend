@@ -1,9 +1,7 @@
 "use client";
 
 import React from "react";
-import { useRouter } from "next/navigation";
 import SignInForm from "@/components/auth/SignInForm";
-import { readAdminSession } from "@/lib/adminAuth";
 
 /**
  * Admin Sign-in Page (Client Component)
